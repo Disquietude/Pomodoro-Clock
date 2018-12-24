@@ -2,10 +2,13 @@ import React, { Component } from 'react';
 import Clock from './Clock';
 import Settings from './Settings';
 
+import alarm from '../../sounds/alarm.mp3';
+
 export default class App extends Component {
   constructor(props) {
     super(props);
     this.timer = null; //field used to store the time interval set up when Start is clicked
+    this.audioClip = React.createRef();
     this.state = {
       workLength: 25, //in minutes
       breakLength: 5, //in minutes
@@ -25,22 +28,22 @@ export default class App extends Component {
   handleChange(propName, event) {
     this.setState({[propName]: event.target.value});
     this.reset();
-    if ((this.state.currentSession == "Work"  && propName == "workLength") ||
-        (this.state.currentSession == "Break" && propName == "breakLength")) {
+    if ((this.state.currentSession === "Work"  && propName === "workLength") ||
+        (this.state.currentSession === "Break" && propName === "breakLength")) {
       this.setState({sessionEndTime: 60*event.target.value});
     }
   }
   
   handleClick(button) {
-    if (button == "Start") {
+    if (button === "Start") {
       this.setState({sessionActive: true});
       this.timer = setInterval(() => this.tick(), 1000);
     }
-    else if (button == "Pause") {
+    else if (button === "Pause") {
       this.setState({sessionActive: false});
       clearInterval(this.timer);
     }
-    else if (button == "Reset") {
+    else if (button === "Reset") {
       this.reset();
     }
   }
@@ -48,11 +51,11 @@ export default class App extends Component {
   //method to handle checkbox settings
   handleCheck(setting) {
     let newSetting;
-    if (setting == "auto") {
+    if (setting === "auto") {
       newSetting = !this.state.autoStartSessions;
       this.setState({autoStartSessions: newSetting});
     }
-    else if (setting == "mute") {
+    else if (setting === "mute") {
       newSetting = !this.state.muteAudio;
       this.setState({muteAudio: newSetting});
     }
@@ -66,7 +69,7 @@ export default class App extends Component {
     //when time runs out in a session
     else {
       let nextSession, nextSessionEndTime;
-      if (this.state.currentSession == "Work") {
+      if (this.state.currentSession === "Work") {
         nextSession = "Break";
         nextSessionEndTime = 60*this.state.breakLength;
       }
@@ -82,10 +85,9 @@ export default class App extends Component {
       
       //play alarm sound if audio is not muted
       if (!this.state.muteAudio) {
-        let audio = document.getElementById("audio");
-        audio.load();
-        audio.play();
-        setTimeout(() => audio.pause(), 1000);
+        this.audioClip.current.currentTime = 0;
+        this.audioClip.current.play();
+        setTimeout(() => this.audioClip.current.pause(), 1000);
       }
       
       //clear the timer if autoStartSessions is false
@@ -108,6 +110,7 @@ export default class App extends Component {
     return (
       <div>
         <h1> Pomodoro Clock </h1>
+        <audio src={alarm} ref={this.audioClip}/>
         <Clock 
           currentSession={this.state.currentSession} 
           currentTime={this.state.currentTime}
@@ -121,7 +124,6 @@ export default class App extends Component {
           onChange={this.handleChange}
           onCheck={this.handleCheck}
         />
-
       </div>
     );
   }

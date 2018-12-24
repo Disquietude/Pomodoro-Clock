@@ -4,7 +4,7 @@ const convertTime = (time) => {
   let seconds = time % 60;
   let minutes = (time-seconds)/60;
   seconds = seconds.toString();
-  if (seconds.length == 1) {
+  if (seconds.length === 1) {
     seconds = "0" + seconds;
   }
   return minutes + ":" + seconds;
