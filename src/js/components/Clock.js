@@ -22,7 +22,7 @@ const Clock = (props) => {
   completionPercent = 100*(props.currentTime/props.sessionEndTime) + "%";
 
   return (
-    <div id="clock">
+    <div className="card clock">
       <h3> {props.currentSession} </h3>
       <div style={{height: 10, border: "solid"}}>
         <div style={{
@@ -35,9 +35,19 @@ const Clock = (props) => {
       <div>
         {convertTime(props.currentTime)} / {convertTime(props.sessionEndTime)}
       </div>
-      <div>
-        <button onClick={(e) => props.onClick(firstButton, e)} className="btn"> {firstButton} </button>
-        <button onClick={(e) => props.onClick("Reset", e)} className="btn"> Reset </button>
+      <div className="clock__controls">
+        <button 
+          onClick={(e) => props.onClick(firstButton, e)} 
+          className="btn btn-primary"
+        > 
+          {firstButton} 
+        </button>
+        <button 
+          onClick={(e) => props.onClick("Reset", e)} 
+          className="btn btn-danger"
+        > 
+          Reset 
+        </button>
       </div>
     </div>
   );

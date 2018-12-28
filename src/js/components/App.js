@@ -108,8 +108,10 @@ export default class App extends Component {
   
   render() {
     return (
-      <div>
-        <h1> Pomodoro Clock </h1>
+      <React.Fragment>
+        <div className="card title">
+          <h1> Pomodoro Clock </h1>
+        </div>
         <audio src={alarm} ref={this.audioClip}/>
         <Clock 
           currentSession={this.state.currentSession} 
@@ -124,7 +126,7 @@ export default class App extends Component {
           onChange={this.handleChange}
           onCheck={this.handleCheck}
         />
-      </div>
+      </React.Fragment>
     );
   }
 }
